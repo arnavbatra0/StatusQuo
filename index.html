@@ -80,27 +80,27 @@
   </div>
 
  <script>
-  fetch('status.json')
-    .then(res => res.json())
-    .then(data => {
-      if (data.length > 0) {
-        // Show latest status
-        document.getElementById('currentStatus').textContent = `Current: ${data[0].status}`;
-        document.getElementById('currentDescription').textContent = `Last updated: ${new Date(data[0].date).toLocaleString()}`;
-
-        // Show history
-        const historyList = document.getElementById('historyList');
-        historyList.innerHTML = data.slice(1).map(
-          entry => `<li>${new Date(entry.date).toLocaleString()} — ${entry.status}</li>`
-        ).join('');
-      }
-    })
-    .catch(err => {
-      console.error('Error loading status.json', err);
+fetch('status.json')
+  .then(response => response.json())
+  .then(data => {
+    data.sort((a, b) => new Date(b.date) - new Date(a.date)); // newest first
+    const latest = data[0];
+    document.getElementById('current-status').innerText = latest.status;
+    document.getElementById('last-updated').innerText = new Date(latest.date).toLocaleString();
+    
+    // Populate history
+    const historyList = document.getElementById('status-history');
+    data.forEach(entry => {
+      const li = document.createElement('li');
+      li.innerText = `${entry.status} — ${new Date(entry.date).toLocaleString()}`;
+      historyList.appendChild(li);
     });
+  });
+
 </script>
 
 </body>
 </html>
+
 
 
