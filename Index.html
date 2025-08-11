@@ -1,0 +1,113 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8"></meta>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"></meta>
+  <title>Status Quo – Briefly, Arnav</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&amp;family=JetBrains+Mono:wght@400;600&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet"></link>
+  <style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f9f9f9;
+    margin: 0;
+    padding: 0;
+  }
+
+  .card {
+    max-width: 700px;
+    margin: 80px auto;
+    padding: 40px;
+    background: #fff;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    text-align: center;
+  }
+
+  .context {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 20px;
+  }
+
+  .title {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  .resolution {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 30px;
+  }
+
+  .description {
+    font-size: 1.1rem;
+    color: #444;
+    margin-bottom: 40px;
+    line-height: 1.6;
+  }
+
+  .divider {
+    margin: 40px 0;
+    border: none;
+    border-top: 1px solid #ddd;
+  }
+
+  .history {
+    font-size: 0.95rem;
+    color: #888;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="context">A quick visual on how life feels right now — metaphorically.</div>
+    <div class="title">📺 Status Quo</div>
+    <div class="resolution" id="currentStatus">Current: 240p</div>
+    <p class="description">
+      Things didn't go as planned.
+    </p>
+
+    <hr class="divider" />
+
+    <div class="history" id="historyBlock">
+      Previous Statuses:
+      <!-- Injected via JS -->
+    </div>
+  </div>
+
+  <script>
+    // === Status config ===
+    const currentStatusText = "360p – A little grainy — like watching a YouTube video on slow internet.";
+    const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+
+    const newEntry = `${currentStatusText} (${today})`;
+
+    // Load history
+    let previous = JSON.parse(localStorage.getItem('statusHistory')) || [];
+
+    // Only push if it's a new status
+    if (previous[0] !== newEntry) {
+      previous.unshift(newEntry); // Add new at start
+      previous = previous.slice(0, 2); // Keep max 2
+      localStorage.setItem('statusHistory', JSON.stringify(previous));
+    }
+
+    // Render history
+    const historyBlock = document.getElementById("historyBlock");
+    if (previous.length > 1) {
+      previous.slice(1).forEach(entry => {
+        const span = document.createElement("span");
+        span.textContent = entry;
+        historyBlock.appendChild(span);
+      });
+    } else {
+      const none = document.createElement("span");
+      none.textContent = "None yet. This is the first update.";
+      historyBlock.appendChild(none);
+    }
+  </script>
+</body>
+</html>
