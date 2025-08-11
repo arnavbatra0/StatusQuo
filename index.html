@@ -83,24 +83,31 @@
 fetch('status.json')
   .then(response => response.json())
   .then(data => {
-    data.sort((a, b) => new Date(b.date) - new Date(a.date)); // newest first
+    // Sort newest first
+    data.sort((a, b) => new Date(b.date) - new Date(a.date));
+
     const latest = data[0];
-    document.getElementById('current-status').innerText = latest.status;
-    document.getElementById('last-updated').innerText = new Date(latest.date).toLocaleString();
-    
+    document.getElementById('currentStatus').innerText =
+      `Current: ${latest.status}`;
+    document.getElementById('currentDescription').innerText =
+      `Last updated: ${new Date(latest.date).toLocaleString()}`;
+
     // Populate history
-    const historyList = document.getElementById('status-history');
-    data.forEach(entry => {
+    const historyList = document.getElementById('historyList');
+    data.slice(1).forEach(entry => {
       const li = document.createElement('li');
-      li.innerText = `${entry.status} — ${new Date(entry.date).toLocaleString()}`;
+      li.innerText = `${new Date(entry.date).toLocaleString()} — ${entry.status}`;
       historyList.appendChild(li);
     });
+  })
+  .catch(err => {
+    console.error('Error loading status.json:', err);
   });
-
 </script>
 
 </body>
 </html>
+
 
 
 
